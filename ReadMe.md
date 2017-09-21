@@ -66,6 +66,23 @@ Library -> Google+ API
 
 ## Hướng dẫn
 
+#### Giả data
+
+```javascript
+let userDB = [
+    {
+        id: 1,
+        username: 'techmaster',
+        password: '111'
+    },
+    {
+        id: 2,
+        username: 'docker',
+        password: '123'
+    },
+]
+```
+
 #### Cài đặt chung
 
 ```javascript
@@ -135,23 +152,12 @@ app.post('/login',
     ```javascript
     passport.use(new LocalStrategy(
         function (username, password, done) {
-            db.one('SELECT * FROM ws_users WHERE username = $1', username)
-                .then(data => {
-                    if (data) {
-                        bcrypt.compare(password, data.password, function (err, res) {
-                            if (err) return done(err);
-    
-                            if (res) return done(null, data.username);
-    
-                            return done(null, false, {message: 'Incorrect password.'});
-                        });
-                    } else {
-                        return done(null, false, {message: 'Incorrect username.'})
-                    }
-                })
-                .catch(error => {
-                    return done(null, false, {message: 'Incorrect username.'})
-                })
+            let checkUser = userDB.find(item => item.username == username && item.password == password)
+            if(checkUser) {
+                return done(null, checkUser.username);
+            }else{
+                return done(null, false, {message: 'Incorrect username or password.'});
+            }
         }
     ));
     ```
@@ -167,24 +173,13 @@ app.post('/login',
         usernameField: 'email',
         passwordField: 'pass',
     },
-        function (email, pass, done) {
-            db.one('SELECT * FROM ws_users WHERE username = $1', email)
-                .then(data => {
-                    if (data) {
-                        bcrypt.compare(pass, data.password, function (err, res) {
-                            if (err) return done(err);
-    
-                            if (res) return done(null, data.username);
-    
-                            return done(null, false, {message: 'Incorrect password.'});
-                        });
-                    } else {
-                        return done(null, false, {message: 'Incorrect username.'})
-                    }
-                })
-                .catch(error => {
-                    return done(null, false, {message: 'Incorrect username.'})
-                })
+        function (email1, pass1, done) {
+            let checkUser = userDB.find(item => item.username == email1 && item.password == pass1)
+            if(checkUser) {
+                return done(null, checkUser.username);
+            }else{
+                return done(null, false, {message: 'Incorrect username or password.'});
+            }
         }
     ));
     ```
@@ -230,7 +225,7 @@ app.get('/auth/facebook/callback',
 
 // Khi người dùng login facebook thì sẽ chạy route này và sẽ vào đăng nhập facebook
 app.get('/login/facebook',
-    passport.authenticate('facebook') // 
+    passport.authenticate('facebook', { scope: ['email']}) // 
 );
 ```
 

@@ -1,32 +1,27 @@
-const {db,} = require('../../pgp');
 const FacebookStrategy = require('passport-facebook').Strategy;
+const shortid = require('shortid')
 
-module.exports = function(passport) {
+module.exports = function(passport, userDB) {
     passport.use('facebook', new FacebookStrategy({
-            clientID: '724038607649657',
-            clientSecret: 'ee909a7ea7210e8c3fa3aeb3716366e5',
+            clientID: '146375905970102',
+            clientSecret: '38374e8c26fbc5a14cb3b00f43c2694e',
             callbackURL: "http://localhost:3002/auth/facebook/callback",
-            profileFields: ['id', 'emails', 'name']
+            profileFields: ['id', 'email', 'name']
         },
         function (accessToken, refreshToken, profile, done) {
         console.log(profile)
             let user = profile._json;
-            db.oneOrNone('SELECT * FROM ws_users WHERE username = $1', user.email)
-                .then(data => {
-                    if (data) {
-                        return done(null, data.username);
-                    }
-                    db.one('INSERT INTO ws_users(username) VALUES($1) RETURNING username', user.email)
-                        .then(data => {
-                            return done(null, data.username);
-                        })
-                        .catch(err => {
-                            return done(null, false, {message: err.message})
-                        })
-                })
-                .catch(error => {
-                    return done(null, false, {message: error.message})
-                });
+            let checkUser = userDB.find(item => item.username == user.email)
+            if(checkUser) {
+                return done(null, checkUser.username);
+            }else{
+                let obj = {};
+                obj.id = shortid.generate();
+                obj.username = user.email;
+                obj.password =''
+                userDB.push(obj)
+                return done(null, user.email);
+            }
         }
     ));
 }
