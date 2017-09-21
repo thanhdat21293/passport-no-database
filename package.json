@@ -1,0 +1,48 @@
+{
+  "name": "demopg_progmise",
+  "version": "1.0.0",
+  "description": "Demo pg_promise",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -S"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TechMaster/pg_promise.git"
+  },
+  "keywords": [
+    "Postgresql",
+    "Promise"
+  ],
+  "author": "Trịnh Minh Cường",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TechMaster/pg_promise/issues"
+  },
+  "homepage": "https://github.com/TechMaster/pg_promise#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.17.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "date-fns": "^1.26.0",
+    "express": "^4.15.3",
+    "express-session": "^1.15.4",
+    "nunjucks": "^3.0.1",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "pg-promise": "^5.5.0",
+    "shortid": "^2.2.6"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "pg-monitor": "^0.7.1",
+    "pg-structure": "^3.5.10"
+  }
+}

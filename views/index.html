@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ajax examples</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+</head>
+<body>
+    {% if login %}
+        <h1>Welcome {{user}}</h1>
+    {% endif %}
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/private">Private</a>
+    <a href="#" onclick="tamBien()">Get</a>
+
+    <form enctype="multipart/form-data">
+        <input type="text" name="hoten" placeholder="Họ tên">
+        <input type="file" name="file1" >
+        <button type="button" onclick="getData()">Send</button>
+    </form>
+<script>
+
+    function tamBien() {
+        jQuery.ajax({
+            url: '/json',
+            type: 'get',
+
+            //data: 'name=Techmaster', // du lieu dang string
+            data: {name: 'Techmaster'}, // du lieu dang json
+            //data: jQuery('form').serialize(), //du lieu se lay tu dong trong form
+
+            //contentType: 'text/plain',
+            //contentType: 'multipart/form-data',
+            //contentType: 'application/x-www-form-urlencoded', // Dung cho post
+
+            //dataType: 'html', // Kiểu dữ liệu nhận
+
+            beforeSend: function(){ //Trước khi gửi sẽ chạy lệnh này
+                jQuery('body').append('<div class="app"></div>');
+            },
+            success: function (result) { // Thành công
+                //console.log('result', result)
+                let html = '';
+                result.task.map(i => {
+                    html += i.desc + ' ';
+                })
+                jQuery('.app').html(html);
+            },
+            complete: function(){ //Bất kể thành công hay không đều chạy
+                console.log('Completed');
+            },
+            error: function(error){ //Báo lỗi
+                console.log('error', error.statusText)
+            }
+        })
+    }
+    function getData() {
+        jQuery.ajax({
+            url: '/getData',
+            type: 'post',
+
+            //data: 'name=Techmaster',
+            //data: {name: 'Techmaster'},
+            data: jQuery('form').serialize(),
+
+            //contentType: 'text/plain',
+            //contentType: 'multipart/form-data',
+            contentType: 'application/x-www-form-urlencoded', // Dung cho post
+
+            //dataType: 'html', // Kiểu dữ liệu nhận
+
+            beforeSend: function(){
+                jQuery('body').append('<div class="app"></div>');
+            },
+            success: function (result) {
+                console.log('result', result)
+                jQuery('.app').html(result);
+            },
+            complete: function(){
+                console.log('Completed');
+            },
+            error: function(error){
+                console.log('error', error.statusText)
+            }
+        })
+    }
+</script>
+</body>
+</html>
+
